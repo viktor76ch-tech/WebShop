@@ -5,6 +5,7 @@
     <title>Редактировать категорию</title>
 </head>
 <body>
+
 <h1>Редактировать категорию</h1>
 
 <form action="{{ route('admin.categories.update', $category) }}" method="POST">
@@ -13,10 +14,10 @@
 
     <p>
         <label>Название *<br>
-            <input type="text" name="name"
-                   value="{{ old('name', $category->name) }}" required>
+            <input type="text" name="title"
+                   value="{{ old('title', $category->title) }}" required>
         </label>
-        @error('name') <br><small style="color:red">{{ $message }}</small> @enderror
+        @error('title') <br><small style="color:red">{{ $message }}</small> @enderror
     </p>
 
     <p>
@@ -28,14 +29,31 @@
     </p>
 
     <p>
-        <label>Описание<br>
-            <textarea name="description">{{ old('description', $category->description) }}</textarea>
+        <label>Родитель<br>
+            <select name="parent_id">
+                <option value="">— нет —</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->id }}"
+                        @selected(old('parent_id', $category->parent_id) == $cat->id)>
+                        {{ $cat->title }}
+                    </option>
+                @endforeach
+            </select>
         </label>
-        @error('description') <br><small style="color:red">{{ $message }}</small> @enderror
+        @error('parent_id') <br><small style="color:red">{{ $message }}</small> @enderror
+    </p>
+
+    <p>
+        <label>
+            <input type="checkbox" name="active" value="1"
+                @checked(old('active', $category->active))>
+            Активна
+        </label>
     </p>
 
     <button type="submit">Обновить</button>
     <a href="{{ route('admin.categories.index') }}">Отмена</a>
 </form>
+
 </body>
 </html>
