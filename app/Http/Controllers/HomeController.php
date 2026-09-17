@@ -9,6 +9,7 @@ class HomeController extends Controller
 {
     public function index()
     {
+        //dd(auth()->user());
         $parentCategories = Category::query()
             ->whereNull('parent_id')
             ->where('active', true)

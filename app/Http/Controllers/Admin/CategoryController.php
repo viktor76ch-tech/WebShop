@@ -3,90 +3,104 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreCategoryRequest;
+use App\Http\Requests\Admin\UpdateCategoryRequest;
 use App\Models\Category;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
+    /**
+     * Display a listing of the categories.
+     */
     public function index(): View
     {
-        $categories = Category::with('parent')
-            ->orderByDesc('id')
-            ->paginate(15);
+        $categories = Category::query()
+            ->with('parent')
+            ->orderBy('title')
+            ->paginate(20);
 
         return view('admin.categories.index', compact('categories'));
     }
 
+    /**
+     * Show the form for creating a new category.
+     */
     public function create(): View
     {
-        $categories = Category::orderBy('title')->get();
+        $categories = Category::query()
+            ->orderBy('title')
+            ->get();
 
         return view('admin.categories.create', compact('categories'));
     }
 
-    public function store(Request $request): RedirectResponse
+    /**
+     * Store a newly created category.
+     */
+    public function store(StoreCategoryRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'title'     => 'required|string|max:255',
-            'slug'      => 'nullable|string|max:255|unique:categories,slug',
-            'parent_id' => 'nullable|integer|exists:categories,id',
-            'active'    => 'nullable|boolean',
-        ]);
-
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['title']);
-        }
-
-        $validated['active'] = $request->boolean('active');
-
-        Category::create($validated);
+        Category::create($request->validated());
 
         return redirect()
             ->route('admin.categories.index')
             ->with('success', 'Категория успешно создана.');
     }
 
-    public function show(string $id): void
+    /**
+     * Display the specified category.
+     */
+    public function show(Category $category): View
     {
-        //
+        $category->load([
+            'parent',
+            'children',
+//            'products',
+        ]);
+
+        return view('admin.categories.show', compact('category'));
     }
 
+    /**
+     * Show the form for editing the specified category.
+     */
     public function edit(Category $category): View
     {
-        $categories = Category::where('id', '!=', $category->id)
+        $categories = Category::query()
+            ->where('id', '!=', $category->id)
             ->orderBy('title')
             ->get();
 
-        return view('admin.categories.edit', compact('category', 'categories'));
+        return view('admin.categories.edit', compact(
+            'category',
+            'categories'
+        ));
     }
 
-    public function update(Request $request, Category $category): RedirectResponse
-    {
-        $validated = $request->validate([
-            'title'     => 'required|string|max:255',
-            'slug'      => 'nullable|string|max:255|unique:categories,slug,' . $category->id,
-            'parent_id' => 'nullable|integer|exists:categories,id|not_in:' . $category->id,
-            'active'    => 'nullable|boolean',
-        ]);
-
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['title']);
-        }
-
-        $validated['active'] = $request->boolean('active');
-
-        $category->update($validated);
+    /**
+     * Update the specified category.
+     */
+    public function update(
+        UpdateCategoryRequest $request,
+        Category $category
+    ): RedirectResponse {
+        $category->update($request->validated());
 
         return redirect()
             ->route('admin.categories.index')
-            ->with('success', 'Категория обновлена.');
+            ->with('success', 'Категория успешно обновлена.');
     }
 
-    public function destroy(string $id): void
+    /**
+     * Remove the specified category.
+     */
+    public function destroy(Category $category): RedirectResponse
     {
-        //
+        $category->delete();
+
+        return redirect()
+            ->route('admin.categories.index')
+            ->with('success', 'Категория успешно удалена.');
     }
 }
