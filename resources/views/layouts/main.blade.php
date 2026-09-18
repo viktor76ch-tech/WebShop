@@ -231,7 +231,9 @@
                            aria-expanded="false">
                             <div class="avatar-circle">
                                 @if(auth()->user()->avatar)
-                                    <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="avatar">
+                                    <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="avatar"
+                                         style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;
+                                         vertical-align: middle; margin-right: 6px;">
                                 @else
                                     <span>{{ mb_strtoupper(mb_substr(auth()->user()->name, 0, 1)) }}</span>
                                 @endif
@@ -248,7 +250,10 @@
                                 <div class="d-flex align-items-center gap-3 p-3">
                                     <div class="avatar-circle avatar-lg">
                                         @if(auth()->user()->avatar)
-                                            <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="avatar">
+                                            <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="avatar"
+                                                 style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
+                                                 display: block; margin: 0 auto 10px;
+                                                 box-shadow: 0 2px 8px rgba(0,0,0,0.15); border: 2px solid #fff;">
                                         @else
                                             <span>{{ mb_strtoupper(mb_substr(auth()->user()->name, 0, 1)) }}</span>
                                         @endif
@@ -264,7 +269,7 @@
 
                             <!-- Мой профиль -->
                             <li>
-                                <a class="dropdown-item" href="{{ route('profile') }}">
+                                <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                     <i class="fas fa-user-circle"></i>
                                     <span>Мой профиль</span>
                                 </a>

@@ -60,14 +60,14 @@ class User extends Authenticatable
         ];
     }
 
-    // Аксессор для полного URL аватарки
+
     public function getAvatarUrlAttribute(): string
     {
         if ($this->avatar) {
             return Storage::url($this->avatar);
         }
 
-        // Заглушка, если аватарки нет
+
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=7F9CF5&background=EBF4FF';
     }
 }
