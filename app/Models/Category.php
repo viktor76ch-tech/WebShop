@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,6 +38,7 @@ use Illuminate\Support\Carbon;
  */
 class Category extends Model
 {
+    use CrudTrait;
     use HasFactory;
 
     protected $fillable = [

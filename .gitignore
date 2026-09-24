@@ -25,3 +25,10 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Backpack / Basset кэш
+/storage/basset
+
+# Скачанные вручную ассеты
+# (мы их коммитим, но если решишь не коммитить — раскомментируй)
+# /public/vendor
